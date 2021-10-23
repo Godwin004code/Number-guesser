@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+        body {
+            width: 100%;
+            margin: 0;
+            background-color: #eee;
+            overflow-x: hidden;
+        }
+        .container {
+            width: 60%;
+            height: 100vh;
+            margin: 0 auto;
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+        }
+        .flex {
+            display: flex;
+            justify-content: space-between;
+        }
+        .flex  .parameter {
+            font-size: 20px;
+            color: black;
+        }
+        h1 {
+            margin: 0 0 1.2em 0;
+        } 
+        .flex input {
+            display: block;
+        }
+        .part-1 {
+            width: 60%;
+        }
+        #number {
+            width: 100%;
+            height: 30px;
+            padding: 0 0 0 .5em;
+        }
+        #submit {
+            margin: 10px 0 0 0;
+            padding: .5em 2em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        #message {
+            padding: 10px 0;
+            font-weight: 900;
+            font-size: 30px;
+        }
+        .parameter {
+            padding: 0 0 .5em 0;
+        }
+        .footer {
+            width: 100%;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            
+        }
+        @media only screen and (max-width: 550px) {
+            body {
+                width: 550px;
+                max-width: 100%;
+            }
+            .container {
+                width: 80%;
+                margin: 0 auto;
+            }
+            .flex {
+                flex-direction: column;
+                justify-content: center;
+            }
+            .part-1 {
+                width: 80%;
+                margin: 0 auto;
+                order: 2;
+            }
+            .parameter {
+                text-align: center;
+            }
+            .part-2 {
+                width: 80%;
+                margin: 0 auto;
+                text-align: center;
+                order: 1;
+            }
+            .footer {
+            bottom: 0;
+        }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Number Guesser</h1>
+        <div class="flex">
+        <div class="part-1">
+        <p class="parameter">
+            Guess a number between <span class="min"></span> and <span class="max"></span>
+        </p>
+        <input type="number" id="number">
+        <input type="submit" id="submit">
+        <p id="message"></p>
+    </div>
+    <div class="part-2">
+        <h2>Guesses Left: <span class="guesses-left"></span> </h2>
+    </div>
+</div>
+<div class="footer">
+    <p>
+        Coded and Built with ❤ by Godilon
+    </p>
+</div>
+    </div>
+    <script>
+        const minNumber = document.querySelector('.min')
+        const maxNumber = document.querySelector('.max')
+        const numberInput = document.querySelector('#number')
+        const submitBtn = document.querySelector('#submit')
+        const message = document.querySelector('#message')
+        const left = document.querySelector('.guesses-left')
+        const container = document.querySelector('.container')
+
+        let min = 1;
+        let max = 100;
+        let joker = getRandomJoker();
+        let guessLength = 5
+        minNumber.textContent = min;
+        maxNumber.textContent = max;
+        left.textContent = guessLength
+
+        container.addEventListener('mousedown', function(e) {
+            if(e.target.className === 'play-again') {
+                window.location.reload()
+            }
+        })
+        submitBtn.addEventListener('click', function(e) {
+            checkForGuessesLeft()
+            let guess = parseInt(numberInput.value)
+
+            if(guess === joker) {
+                Eror(`Wohoo!, You're the best guesser in the world`, 'green')
+                submitBtn.value = `Play Again`
+                submitBtn.className += 'play-again'
+
+            }
+            else if(guess < joker) {
+                guessLength--
+                left.textContent = guessLength
+                Eror(`You can do better`, 'red')
+            } 
+            else if(guess > joker) {
+                guessLength--
+                left.textContent = guessLength
+                Eror(`You're so good at guessing but you're wrong`, 'red')
+            }
+            if(isNaN(guess) || guess < min || guess > max) {
+                Eror(`Please enter a number between ${min} and ${max}`, 'red')
+            }
+            
+            e.preventDefault()
+        })
+        function Eror(msg, color) {
+            message.textContent = msg
+            message.style.color = color
+            numberInput.style.borderColor = color
+        }
+        function checkForGuessesLeft() {
+            if(guessLength === 1) {
+                submitBtn.value = `Play Again`
+                submitBtn.className += 'play-again'
+            }
+        }
+
+        function getRandomJoker() {
+            return Math.floor(Math.random()  * (max - min)  + 1)
+        }
+        console.log(joker);
+
+
+    </script>
+</body>
+</html>
